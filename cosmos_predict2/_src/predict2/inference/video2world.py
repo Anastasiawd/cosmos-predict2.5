@@ -427,7 +427,8 @@ class Video2WorldInference:
             "dataset_name": "video_data",
             "video": video,
             "action": action.unsqueeze(0) if action is not None else None,
-            "fps": torch.randint(16, 32, (self.batch_size,)).float(),  # Random FPS (might be used by model)
+            # "fps": torch.randint(16, 32, (self.batch_size,)).float(),  # Random FPS (might be used by model)
+            "fps": torch.full((self.batch_size,), 10.0),
             "padding_mask": torch.zeros(self.batch_size, 1, H, W),  # Padding mask (assumed no padding here)
             "num_conditional_frames": num_conditional_frames,  # Specify number of conditional frames
         }
@@ -476,7 +477,7 @@ class Video2WorldInference:
         input_path: str | torch.Tensor | None,
         guidance: int = 7,
         num_video_frames: int = 77,
-        num_latent_conditional_frames: int = 1,
+        num_latent_conditional_frames: int = 2,
         num_input_video: int = 1,
         num_output_video: int = 1,
         resolution: str = "192,320",
