@@ -22,6 +22,10 @@ from cosmos_predict2._src.predict2.models.video2world_model_rectified_flow impor
     Video2WorldModelRectifiedFlow,
     Video2WorldModelRectifiedFlowConfig,
 )
+from cosmos_predict2._src.predict2.models.video2world_vln_alignment_model import (
+    Video2WorldVLNAlignmentModel,
+    Video2WorldVLNAlignmentModelConfig,
+)
 from cosmos_predict2._src.predict2.models.video2world_wan2pt1_model import I2VWan2pt1Model
 
 DDP_CONFIG = dict(
@@ -73,6 +77,19 @@ FSDP_RECTIFIED_FLOW_CONFIG = dict(
     ),
 )
 
+FSDP_VLN_ALIGNMENT_CONFIG = dict(
+    trainer=dict(
+        distributed_parallelism="fsdp",
+    ),
+    model=L(Video2WorldVLNAlignmentModel)(
+        config=Video2WorldVLNAlignmentModelConfig(
+            fsdp_shard_size=8,
+            state_t=24,
+        ),
+        _recursive_=False,
+    ),
+)
+
 
 def register_model():
     cs = ConfigStore.instance()
@@ -80,3 +97,4 @@ def register_model():
     cs.store(group="model", package="_global_", name="fsdp", node=FSDP_CONFIG)
     cs.store(group="model", package="_global_", name="fsdp_wan2pt1", node=FSDP_WAN2PT1_CONFIG)
     cs.store(group="model", package="_global_", name="fsdp_rectified_flow", node=FSDP_RECTIFIED_FLOW_CONFIG)
+    cs.store(group="model", package="_global_", name="fsdp_vln_alignment", node=FSDP_VLN_ALIGNMENT_CONFIG)
